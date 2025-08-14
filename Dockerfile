@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libxkbcommon0 \
     libasound2 \
+    fonts-unifont \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Python packages from builder
@@ -36,7 +37,7 @@ COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Install Playwright browsers
-RUN playwright install --with-deps chromium
+RUN playwright install chromium
 
 WORKDIR /app
 
