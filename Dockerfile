@@ -16,4 +16,4 @@ RUN useradd --create-home --shell /bin/bash app \
 USER app
 
 # Command for Render
-CMD ["python", "tools/scrape_website.py"]
+CMD python tools/scrape_website.py && uvicorn app:app --host 0.0.0.0 --port $PORT
