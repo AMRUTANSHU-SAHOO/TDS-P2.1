@@ -1,63 +1,19 @@
-# Multi-stage build for smaller final image
-FROM python:3.11-slim as builder
+# Use official Playwright image (has Python + Chromium pre-installed)
+FROM mcr.microsoft.com/playwright/python:v1.47.0-jammy
 
 WORKDIR /app
 
-# Copy and install dependencies
+# Copy requirements and install
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Production stage
-FROM python:3.11-slim
+# Copy the rest of your app
+COPY . .
 
-# Install runtime dependencies for Playwright
-RUN apt-get update && apt-get install -y \
-    libnss3 \
-    libnspr4 \
-    libdbus-1-3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libxss1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libgbm1 \
-    libxkbcommon0 \
-    libasound2 \
-    fonts-unifont \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libxshmfence1 \
-    libglu1-mesa \
-    wget \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy Python packages from builder
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-
-# Install Playwright browsers
-RUN playwright install chromium \
-    && mkdir -p /home/app/.cache/ms-playwright \
-    && cp -r /root/.cache/ms-playwright/* /home/app/.cache/ms-playwright/ \
-    && chown -R app:app /home/app/.cache
-
-WORKDIR /app
-
-# Copy application code
-COPY tools/scrape_website.py ./
-
-# Create non-root user
+# Create non-root user (optional, but recommended for Render)
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
 USER app
-ENV PATH="/root/.local/bin/:$PATH"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import playwright; print('OK')" || exit 1
-
-CMD ["python", "scrape_website.py"]
+# Command for Render
+CMD ["python", "tools/scrape_website.py"]
