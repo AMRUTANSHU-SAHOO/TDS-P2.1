@@ -30,6 +30,10 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     libasound2 \
     fonts-unifont \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libxshmfence1 \
+    libglu1-mesa \
     wget \
     unzip \
     && rm -rf /var/lib/apt/lists/*
