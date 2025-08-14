@@ -30,6 +30,8 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     libasound2 \
     fonts-unifont \
+    wget \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Python packages from builder
