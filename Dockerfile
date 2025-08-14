@@ -7,8 +7,8 @@ COPY --from=ghcr.io/astral-sh/uv:0.8.3 /uv /uvx /bin/
 WORKDIR /app
 
 # Copy and install dependencies
-COPY pyproject.toml ./
-RUN uv pip install --system --no-cache-dir playwright
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Production stage
 FROM python:3.11-slim
