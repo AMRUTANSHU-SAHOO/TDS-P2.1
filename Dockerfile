@@ -37,7 +37,7 @@ COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Install Playwright browsers
-RUN playwright install chromium
+RUN playwright install chromium \
     && mkdir -p /home/app/.cache/ms-playwright \
     && cp -r /root/.cache/ms-playwright/* /home/app/.cache/ms-playwright/ \
     && chown -R app:app /home/app/.cache
