@@ -38,6 +38,9 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Install Playwright browsers
 RUN playwright install chromium
+    && mkdir -p /home/app/.cache/ms-playwright \
+    && cp -r /root/.cache/ms-playwright/* /home/app/.cache/ms-playwright/ \
+    && chown -R app:app /home/app/.cache
 
 WORKDIR /app
 
