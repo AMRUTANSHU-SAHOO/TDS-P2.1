@@ -148,7 +148,3 @@ async def process_input(
         return JSONResponse(status_code=400, content={"error": "No valid question provided."})
     except Exception as e:
         return JSONResponse(status_code=400, content={"error": str(e)})
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
